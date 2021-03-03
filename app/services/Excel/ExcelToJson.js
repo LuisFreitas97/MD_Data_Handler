@@ -10,35 +10,51 @@ export class ExcelToJson {
             return {"msg": "invalid body"};
         }
         var path = body.path;
-        var name = body.name;
-        var map = body.map;
+        // var sheetName = body.sheetName;
+        // var map = body.map;
         var headerRow = body.headerRow;
+        var collName = body.collectionName;
 
-        if(!path || !name || !map || !headerRow ){
-            return {"msg": "invalid body parameters"};
+        if(!path || !collName){
+            return {"msg": "invalid input parameters"};
         }
        
         var excelData = excelToJson({
             sourceFile: path,
-            sheets: [{
-                name: name,
-                header: {
-                    rows: headerRow
-                },
-                columnToKey: map
-            }]
+            header: {
+                rows: headerRow
+            }
+            // sheets: [{
+            //     name: name,
+            //     header: {
+            //         rows: headerRow
+            //     },
+            //     columnToKey: map
+            // }]
         });
 
-        return excelData;
+        //return excelData;
 
         // insert in bd
-        return await this.insertExcelDataInDb(excelData, name);
+        var result = await ExcelToJson.insertExcelDataInDb(excelData.Folha1, collName);
+        console.log("antes do retorno final");
+        return result;
     }
 
     static async insertExcelDataInDb(data, collName) {
         var body = {"data": data, "collectionName": collName };
         var db_ms_url = process.env.DB_MICROSERVICE;
-        return await Ajax.postRequest(db_ms_url + '/insertJsonData', body);
+        var result;
+        console.log("fora");
+        await Ajax.postRequest(db_ms_url + '/insertJsonData', body,
+        function(err,body){
+            console.log("fora do sucesso");
+            result = {"msg": err} 
+        },function(body){
+            console.log("dentro do sucesso");
+            result = {"msg": body};
+        });
+        return result;
     }
 };
 

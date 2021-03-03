@@ -1,16 +1,19 @@
 import request from 'ajax-request';
 
+
 export class Ajax {
-    static async postRequest(url, data) {
-        var result;
-        await request({
+    static postRequest(url, data, error, success) {
+        return request({
             url: url,
             method: 'POST',
             data: data
         }, function (err, res, body) {
-            result = { "err": err, "res": res, "body": body };
+            if(!err){
+                success(body);
+            }else{
+                error(err,body);
+            }
         });
-        return result;
     }
 
     static async getRequest(url, query) {
@@ -20,7 +23,7 @@ export class Ajax {
             method: 'GET',
             data: query
         }, function (err, res, body) {
-            result = { "err": err, "res": res, "body": body };
+            result = { "err": err, "body": body };
         });
         return result;
     }
