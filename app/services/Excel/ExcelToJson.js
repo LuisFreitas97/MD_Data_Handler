@@ -37,23 +37,15 @@ export class ExcelToJson {
 
         // insert in bd
         var result = await ExcelToJson.insertExcelDataInDb(excelData.Folha1, collName);
-        console.log("antes do retorno final");
-        return result;
+        console.log("depois do psotRequest");
+        return result.data;
     }
 
     static async insertExcelDataInDb(data, collName) {
         var body = {"data": data, "collectionName": collName };
         var db_ms_url = process.env.DB_MICROSERVICE;
-        var result;
-        console.log("fora");
-        await Ajax.postRequest(db_ms_url + '/insertJsonData', body,
-        function(err,body){
-            console.log("fora do sucesso");
-            result = {"msg": err} 
-        },function(body){
-            console.log("dentro do sucesso");
-            result = {"msg": body};
-        });
+        console.log("antes do postRequest");
+        var result = await Ajax.postRequest(db_ms_url + '/insertJsonData', body);
         return result;
     }
 };
