@@ -6,19 +6,19 @@ dotenv.config();
 export class ExcelToJson {
     static async convertExcelToJson(req) {
         var body = req.body;
-        if(!body){
-            return {"msg": "invalid body"};
+        if (!body) {
+            return { "msg": "invalid body" };
         }
         var path = body.path;
         // var sheetName = body.sheetName;
         // var map = body.map;
         var headerRow = body.headerRow;
-        var collName = body.collectionName;
+        // var collName = body.collectionName;
 
-        if(!path || !collName){
-            return {"msg": "invalid input parameters"};
+        if (!path ) {
+            return { "msg": "invalid input parameters" };
         }
-       
+
         var excelData = excelToJson({
             sourceFile: path,
             header: {
@@ -34,17 +34,20 @@ export class ExcelToJson {
         });
 
         //return excelData;
+        //create a collection peer sheet
+        Object.keys(excelData).forEach(async function(key) {
+            await ExcelToJson.insertExcelDataInDb(excelData[key], key);
+        });
 
         // insert in bd
-        var result = await ExcelToJson.insertExcelDataInDb(excelData.Folha1, collName);
-        console.log("depois do psotRequest");
-        return result.data;
+        //var result = await ExcelToJson.insertExcelDataInDb(excelData.Folha1, collName);
+        //return result.data;
+        return { "msg": "Data inserted!", "code": 201 };
     }
 
     static async insertExcelDataInDb(data, collName) {
-        var body = {"data": data, "collectionName": collName };
+        var body = { "data": data, "collectionName": collName };
         var db_ms_url = process.env.DB_MICROSERVICE;
-        console.log("antes do postRequest");
         var result = await Ajax.postRequest(db_ms_url + '/insertJsonData', body);
         return result;
     }
