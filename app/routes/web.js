@@ -16,6 +16,8 @@ router.post("/insertExcelData", asyncHandler(async (req, res, next) => {
 }));
 
 // router.post("/upload", upload.single("file"), excelController.upload);
-router.post("/upload", uploadFile.single("file"), function (req, res) {
-  res.json(req.file.filename);
-});
+router.post("/upload", uploadFile.single("file"), asyncHandler(async (req, res, next) => {
+  // res.json(req.file.filename);
+  var result = await ExcelToJson.convertExcelToJson(req);
+  res.json(result);
+}));

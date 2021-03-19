@@ -9,15 +9,18 @@ export class ExcelToJson {
         if (!body) {
             return { "msg": "invalid body" };
         }
-        var path = body.path;
+        // var path = body.path;
+        var fileName = req.file.filename;
         // var sheetName = body.sheetName;
         // var map = body.map;
         var headerRow = body.headerRow;
         // var collName = body.collectionName;
 
-        if (!path ) {
+        if (!fileName) {
             return { "msg": "invalid input parameters" };
         }
+
+        var path = 'uploads/excel/' + fileName;
 
         var excelData = excelToJson({
             sourceFile: path,
