@@ -38,14 +38,15 @@ export class ExcelToJson {
 
         //return excelData;
         //create a collection peer sheet
+        var result;
         Object.keys(excelData).forEach(async function(key) {
-            await ExcelToJson.insertExcelDataInDb(excelData[key], key);
+            result = await ExcelToJson.insertExcelDataInDb(excelData[key], key);
         });
 
         // insert in bd
         //var result = await ExcelToJson.insertExcelDataInDb(excelData.Folha1, collName);
         //return result.data;
-        return { "msg": "Data inserted!", "code": 201 };
+        return { "msg": "Data inserted with success", "code": 201 };
     }
 
     static async insertExcelDataInDb(data, collName) {
