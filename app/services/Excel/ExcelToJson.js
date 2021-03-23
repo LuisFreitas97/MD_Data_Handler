@@ -38,22 +38,21 @@ export class ExcelToJson {
 
         //return excelData;
         //create a collection peer sheet
-        var result;
-        Object.keys(excelData).forEach(async function(key) {
-            result = await ExcelToJson.insertExcelDataInDb(excelData[key], key);
-        });
+        var err;
+        var db_ms_url = process.env.DB_MICROSERVICE + '/insertJsonData';
+        for (const property in excelData) {
+            var body = { "data": excelData[property], "collectionName": property };
+            await Ajax.postRequest(db_ms_url, body, function (data) {
 
-        // insert in bd
-        //var result = await ExcelToJson.insertExcelDataInDb(excelData.Folha1, collName);
-        //return result.data;
-        return { "msg": "Data inserted with success", "code": 201 };
-    }
-
-    static async insertExcelDataInDb(data, collName) {
-        var body = { "data": data, "collectionName": collName };
-        var db_ms_url = process.env.DB_MICROSERVICE;
-        var result = await Ajax.postRequest(db_ms_url + '/insertJsonData', body);
-        return result;
+            }, function (error) {
+                err = { 'msg': error.response.data, 'code': error.response.status };
+            });
+        }
+        if (err) {
+            return err;
+        } else {
+            return { 'msg': 'data inserted', 'code': 201 };
+        }
     }
 };
 
