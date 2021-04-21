@@ -3,9 +3,9 @@ import axios from 'axios';
 
 
 export class Ajax {
-    static async postRequest(url, data, success, err) {
+    static async postRequest(url, data, headers={}, success, err) {
         var result;
-        await axios.post(url, data).then(response => {
+        await axios.post(url, data, headers).then(response => {
             result = response;
             success(result.data);
         }).catch(error => {
