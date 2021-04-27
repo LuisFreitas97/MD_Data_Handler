@@ -2,8 +2,8 @@ import { Ajax } from '../../request/ajax.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-export class MetereoAPI {
-    static async saveMetereoData(req) {
+export class WeatherAPI {
+    static async saveWeatherData(req) {
         var body = req.body;
         if (!body) {
             return { "msg": "invalid body" };
@@ -20,8 +20,8 @@ export class MetereoAPI {
         var err;
 
         var body = { "data": data };
-        var headers = {"auth": { "username": process.env.METEREO_USER, "password": process.env.METEREO_PASS }};
-        await Ajax.postRequest(process.env.METEREO_API, body, headers, function (data) {
+        var headers = {"auth": { "username": process.env.WEATHER_USER, "password": process.env.WEATHER_PASS }};
+        await Ajax.postRequest(process.env.WEATHER_API, body, headers, function (data) {
 
         }, function (error) {
             err = { 'msg': error.response.data, 'code': error.response.status };

@@ -1,6 +1,7 @@
 import { Ajax } from '../../request/ajax.js';
 import dotenv from 'dotenv';
-var fs = require('fs');
+import fs from "fs";
+
 dotenv.config();
 
 export class JsonHandler {
@@ -25,7 +26,7 @@ export class JsonHandler {
         var data = JSON.parse(fs.readFileSync(path, 'utf8'));
 
         var body = { "data": data, "collectionName": 'property' };
-        await Ajax.postRequest(db_ms_url, body, function (data) {
+        await Ajax.postRequest(db_ms_url, body, {}, function (data) {
 
         }, function (error) {
             err = { 'msg': error.response.data, 'code': error.response.status };

@@ -42,7 +42,7 @@ export class ExcelToJson {
         var db_ms_url = process.env.DB_MICROSERVICE + '/insertJsonData';
         for (const property in excelData) {
             var body = { "data": excelData[property], "collectionName": property };
-            await Ajax.postRequest(db_ms_url, body, function (data) {
+            await Ajax.postRequest(db_ms_url, body, {}, function (data) {
 
             }, function (error) {
                 err = { 'msg': error.response.data, 'code': error.response.status };
