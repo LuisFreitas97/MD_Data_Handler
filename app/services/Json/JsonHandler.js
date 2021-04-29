@@ -8,13 +8,13 @@ export class JsonHandler {
     static async storeJson(req) {
         var body = req.body;
         if (!body) {
-            return { "msg": "invalid body" };
+            return { "msg": "invalid body", "code": 500 };
         }
 
         var fileName = req.file.filename;
 
         if (!fileName) {
-            return { "msg": "invalid input parameters" };
+            return { "msg": "invalid input parameters", "code": 500 };
         }
 
         var path = 'uploads/json/' + fileName;
