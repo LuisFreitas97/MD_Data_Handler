@@ -21,7 +21,9 @@ export class WeatherAPI {
         var headers = { "auth": { "username": process.env.WEATHER_USER, "password": process.env.WEATHER_PASS }, "content-type": "application/x-www-form-urlencoded" };
 
         await Ajax.postRequest(process.env.WEATHER_API, qs.stringify(body), headers, function (data) {
-            result = WeatherAPI.insertWeatherInDb(data,"weatherAPI");
+            var array = [];
+            array.push(data)
+            result = WeatherAPI.insertWeatherInDb(array,"weatherAPI");
         }, function (error) {
             result = { 'msg': error.response.data, 'code': error.response.status };
         });
