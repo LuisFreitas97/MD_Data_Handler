@@ -1,6 +1,5 @@
 import { Ajax } from '../../request/ajax.js';
 import dotenv from 'dotenv';
-// import FormData from "form-data";
 import qs from 'qs';
 dotenv.config();
 
@@ -18,31 +17,27 @@ export class WeatherAPI {
             return { "msg": "invalid input parameters", "code": 500 };
         }
 
-        //create a collection for json file
-        var err;
-
-        // var body = { "coord": coord, "vars": vars };
-        // var form = new FormData();
-        // form.append('coord', coord);
-        // form.append('vars', vars);
-
+        var result;
         var headers = { "auth": { "username": process.env.WEATHER_USER, "password": process.env.WEATHER_PASS }, "content-type": "application/x-www-form-urlencoded" };
 
-        // var formDataHeaders = form.getHeaders(headers);
-
-        // console.log(formDataHeaders);
-
-
         await Ajax.postRequest(process.env.WEATHER_API, qs.stringify(body), headers, function (data) {
-
+            result = WeatherAPI.insertWeatherInDb(data,"weatherAPI");
         }, function (error) {
-            err = { 'msg': error.response.data, 'code': error.response.status };
+            result = { 'msg': error.response.data, 'code': error.response.status };
         });
-        if (err) {
-            return err;
-        } else {
-            return { 'msg': 'data inserted', 'code': 201 };
-        }
+        return result;
+    }
+    static async insertWeatherInDb(data, collectionName) {
+        var result;
+        var db_ms_url = process.env.DB_MICROSERVICE + '/insertJsonData';
+        var body = { "data": data, "collectionName": collectionName };
+
+        await Ajax.postRequest(db_ms_url, body, {}, function (data) {
+            result = { 'msg': data, 'code': 201 };
+        }, function (error) {
+            result = { 'msg': error.response.data, 'code': error.response.status };
+        });
+        return result;
     }
 };
 
