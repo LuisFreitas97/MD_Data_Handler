@@ -1,6 +1,7 @@
 import { Ajax } from '../../request/ajax.js';
 import dotenv from 'dotenv';
 import fs from "fs";
+import { JsonHelper } from '../../Helpers/JsonHelper.js';
 
 dotenv.config();
 
@@ -25,18 +26,15 @@ export class JsonHandler {
 
         var data = JSON.parse(fs.readFileSync(path, 'utf8'));
 
-        var array = [];
-        if (typeof data === "object") {
-            array.push(data)
-        } else if (typeof data === "array") {
-            array = data;
-        } else {
+        data = JsonHelper.convertJson(data);
+
+        if(!data){
             return { "msg": "invalid input parameters", "code": 500 };
         }
 
         var result;
 
-        var body = { "data": array, "collectionName": 'property' };
+        var body = { "data": data, "collectionName": 'property' };
         await Ajax.postRequest(db_ms_url, body, {}, function (data) {
             result = { 'msg': data, 'code': 201 };
         }, function (error) {

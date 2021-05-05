@@ -2,6 +2,7 @@ import { Ajax } from '../../request/ajax.js';
 import dotenv from 'dotenv';
 import qs from 'qs';
 dotenv.config();
+import { JsonHelper } from '../../Helpers/JsonHelper.js';
 
 export class WeatherAPI {
     static async saveWeatherData(req) {
@@ -21,15 +22,8 @@ export class WeatherAPI {
         var headers = { "auth": { "username": process.env.WEATHER_USER, "password": process.env.WEATHER_PASS }, "content-type": "application/x-www-form-urlencoded" };
 
         await Ajax.postRequest(process.env.WEATHER_API, qs.stringify(body), headers, function (data) {
-            var array = [];
-            if(typeof data === "object"){
-                array.push(data)
-            }else if(typeof data === "array"){
-                array = data;
-            }else{
-                return { "msg": "invalid input parameters", "code": 500 };
-            }
-            result = WeatherAPI.insertWeatherInDb(array,"weatherAPI");
+            data = JsonHelper.convertJson(data);
+            result = WeatherAPI.insertWeatherInDb(data,"weatherAPI");
         }, function (error) {
             result = { 'msg': error.response.data, 'code': error.response.status };
         });
