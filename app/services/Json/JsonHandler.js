@@ -25,17 +25,24 @@ export class JsonHandler {
 
         var data = JSON.parse(fs.readFileSync(path, 'utf8'));
 
-        var body = { "data": data, "collectionName": 'property' };
-        await Ajax.postRequest(db_ms_url, body, {}, function (data) {
-
-        }, function (error) {
-            err = { 'msg': error.response.data, 'code': error.response.status };
-        });
-        if (err) {
-            return err;
+        var array = [];
+        if (typeof data === "object") {
+            array.push(data)
+        } else if (typeof data === "array") {
+            array = data;
         } else {
-            return { 'msg': 'data inserted', 'code': 201 };
+            return { "msg": "invalid input parameters", "code": 500 };
         }
+
+        var result;
+
+        var body = { "data": array, "collectionName": 'property' };
+        await Ajax.postRequest(db_ms_url, body, {}, function (data) {
+            result = { 'msg': data, 'code': 201 };
+        }, function (error) {
+            result = { 'msg': error.response.data, 'code': error.response.status };
+        });
+        return result;
     }
 };
 

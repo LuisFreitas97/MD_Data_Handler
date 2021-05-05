@@ -22,7 +22,13 @@ export class WeatherAPI {
 
         await Ajax.postRequest(process.env.WEATHER_API, qs.stringify(body), headers, function (data) {
             var array = [];
-            array.push(data)
+            if(typeof data === "object"){
+                array.push(data)
+            }else if(typeof data === "array"){
+                array = data;
+            }else{
+                return { "msg": "invalid input parameters", "code": 500 };
+            }
             result = WeatherAPI.insertWeatherInDb(array,"weatherAPI");
         }, function (error) {
             result = { 'msg': error.response.data, 'code': error.response.status };
