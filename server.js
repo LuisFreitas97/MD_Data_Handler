@@ -1,5 +1,4 @@
 import express from 'express';
-// import bodyParser from 'body-parser';
 import cors from "cors";
 import { router } from './app/routes/web.js';
 import dotenv from 'dotenv';
@@ -13,22 +12,10 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// parse requests of content-type - application/json
-// app.use(bodyParser.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({ extended: true }));
-
-// simple route
-/*app.get("/", (req, res) => {
-  res.json({ message: "Welcome to application." });
-});*/
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 app.use('/', router);
-
 
 // set port, listen for requests
 const PORT = process.env.SERVICE_PORT || 8080;

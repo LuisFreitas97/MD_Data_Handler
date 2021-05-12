@@ -13,15 +13,15 @@ export class JsonHandler {
         }
 
         var fileName = req.file.filename;
+        var collectionName = body.name;
 
-        if (!fileName) {
+        if (!fileName || ! collectionName) {
             return { "msg": "invalid input parameters", "code": 500 };
         }
 
         var path = 'uploads/json/' + fileName;
 
         //create a collection for json file
-        var err;
         var db_ms_url = process.env.DB_MICROSERVICE + '/insertJsonData';
 
         var data = JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -34,7 +34,7 @@ export class JsonHandler {
 
         var result;
 
-        var body = { "data": data, "collectionName": 'property' };
+        var body = { "data": data, "collectionName": collectionName };
         await Ajax.postRequest(db_ms_url, body, {}, function (data) {
             result = { 'msg': data, 'code': 201 };
         }, function (error) {
