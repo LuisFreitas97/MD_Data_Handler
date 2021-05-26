@@ -13,9 +13,9 @@ export class Ajax {
         });
     }
 
-    static async getRequest(url, success, err) {
+    static async getRequest(url, config, success, err) {
         var result;
-        await axios.get(url).then(response => {
+        await axios.get(url, config).then(response => {
             result = response;
             success(result.data);
         }).catch(error => {

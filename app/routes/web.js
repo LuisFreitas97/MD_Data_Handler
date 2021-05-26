@@ -33,5 +33,5 @@ router.post("/uploadJson", uploadJsonFile.single("file"), asyncHandler(async (re
 //Save weather data from API
 router.post("/weatherData", asyncHandler(async (req, res, next) => {
   var result = await WeatherAPI.saveWeatherData(req);
-  res.status(result.code).json(result.msg);
+  res.status(result.code).json(result);
 }));
