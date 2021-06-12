@@ -14,6 +14,7 @@ export class JsonHandler {
 
         var fileName = req.file.filename;
         var collectionName = body.name;
+        var propertyName = body.propertyName;
 
         if (!fileName || ! collectionName) {
             return { "msg": "invalid input parameters", "code": 500 };
@@ -25,6 +26,10 @@ export class JsonHandler {
         var db_ms_url = process.env.DB_MICROSERVICE + '/insertJsonData';
 
         var data = JSON.parse(fs.readFileSync(path, 'utf8'));
+
+        if(propertyName){
+            data = data[propertyName];
+        }
 
         data = JsonHelper.convertJson(data);
 

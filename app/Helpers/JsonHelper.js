@@ -1,9 +1,9 @@
 export class JsonHelper {
     static convertJson(data) {
         var array = [];
-        if (typeof data === "object") {
+        if (Object.prototype.toString.call(data) === '[object Object]') {
             array.push(data)
-        } else if (typeof data === "array") {
+        } else if (Object.prototype.toString.call(data) === '[object Array]') {
             array = data;
         } else {
             return null;

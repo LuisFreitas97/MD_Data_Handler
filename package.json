@@ -1,6 +1,9 @@
 {
   "name": "ms_data_handler",
   "version": "1.0.0",
+  "nodemonConfig": {
+    "ignore": ["uploads/*"]
+  },
   "description": "Microservice data handler",
   "main": "server.js",
   "type": "module",

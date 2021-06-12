@@ -48,7 +48,6 @@ export class WeatherAPI {
         }else{
             result = { "msg": "success", "data": "success", "code": 201 };
         }
-        console.log("aqui");
         return result;
     }
 
